@@ -3,7 +3,7 @@
  * @Author: PhilRandWu
  * @Github: https://github/PhilRandWu
  * @Date: 2022-04-14 13:01:04
- * @LastEditTime: 2022-04-14 15:43:43
+ * @LastEditTime: 2022-04-14 22:26:08
  * @LastEditors: PhilRandWu
 -->
 <template>
@@ -15,7 +15,7 @@
     label-width="100px"
     class="demo-ruleForm"
   >
-  <el-form-item label="用户名" prop="user">
+    <el-form-item label="用户名" prop="user">
       <el-input
         type="text"
         v-model="ruleForm.user"
@@ -44,13 +44,14 @@
 </template>
 <script>
 export default {
+  middleware: 'login',
   data() {
     var checkAge = (rule, value, callback) => {
       setTimeout(() => {
         if (!Number.isInteger(value)) {
           callback(new Error("请输入数字值"));
         } else {
-            callback();
+          callback();
         }
       }, 1000);
     };
@@ -75,13 +76,13 @@ export default {
     };
     return {
       ruleForm: {
-          user: '',
+        user: "",
         pass: "",
         checkPass: "",
       },
       rules: {
         pass: [{ validator: validatePass, trigger: "blur" }],
-        checkPass: [{ validator: validatePass2, trigger: "blur" }]
+        checkPass: [{ validator: validatePass2, trigger: "blur" }],
       },
     };
   },
@@ -89,13 +90,21 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          console.log(this.ruleForm)
-          alert("submit!");
           try {
-            const result = await this.$axios.post('/login',this.ruleForm);
-            console.log(result);
+            const result = await this.$axios.post("/login", this.ruleForm);
+            this.$message({
+              message: result.msg,
+              type: "success",
+            });
+            this.$store.commit("setUser", result.name);
+            this.$store.commit("setIsLogin", true);
+            const url = this.$route.query.url || "/home";
+            this.$router.push(url);
           } catch (error) {
-            console.log(error)
+            this.$message({
+              message: error.msg,
+              type: "error",
+            });
           }
         } else {
           console.log("error submit!!");
@@ -113,7 +122,7 @@ export default {
 
 <style>
 .demo-ruleForm {
-    width: 50%;
-    margin: 45px 188px 304px;
+  width: 50%;
+  margin: 45px 188px 304px;
 }
 </style>

@@ -3,7 +3,7 @@
  * @Author: PhilRandWu
  * @Github: https://github/PhilRandWu
  * @Date: 2022-04-14 12:52:58
- * @LastEditTime: 2022-04-14 13:26:17
+ * @LastEditTime: 2022-04-14 22:31:25
  * @LastEditors: PhilRandWu
 -->
 <template>
@@ -11,9 +11,9 @@
     <el-row>
       <el-col :span="24">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-            <nuxt-link to="/home">首页</nuxt-link>
-            <nuxt-link to="/about">关于</nuxt-link>
-            <nuxt-link to="/login">登录</nuxt-link>
+          <nuxt-link to="/home">首页</nuxt-link>
+          <nuxt-link to="/about">关于</nuxt-link>
+          <nuxt-link to="/login">{{ user ? user : '登录' }}</nuxt-link>
         </el-tabs>
       </el-col>
     </el-row>
@@ -29,11 +29,19 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
+  mounted() {
+    console.log(this.user);
+  },
   data() {
     return {
       activeName: "second",
     };
+  },
+  computed: {
+    ...mapState(["user"]),
   },
   methods: {
     handleClick(tab, event) {
