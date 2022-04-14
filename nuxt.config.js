@@ -3,7 +3,7 @@
  * @Author: PhilRandWu
  * @Github: https://github/PhilRandWu
  * @Date: 2022-04-14 12:52:40
- * @LastEditTime: 2022-04-14 12:52:40
+ * @LastEditTime: 2022-04-14 15:13:11
  * @LastEditors: PhilRandWu
  */
 export default {
@@ -31,7 +31,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '@/plugins/element-ui.js'
+    '@/plugins/element-ui.js',
+    '@/plugins/axios.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -42,12 +43,26 @@ export default {
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
   ],
-
+  axios: {
+    baseURL: 'http://localhost:3000/api'
+  },
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/proxy',
   ],
-
+  proxy: {
+    '/api/': {
+      target: 'http://127.0.0.1:8080/',
+      pathRewrite: {
+        '^/api/': ''
+      }
+    }
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+  router: {
+    middleware: 'init'
   }
 }

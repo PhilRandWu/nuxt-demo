@@ -3,7 +3,7 @@
  * @Author: PhilRandWu
  * @Github: https://github/PhilRandWu
  * @Date: 2022-04-14 13:01:04
- * @LastEditTime: 2022-04-14 13:28:21
+ * @LastEditTime: 2022-04-14 15:43:43
  * @LastEditors: PhilRandWu
 -->
 <template>
@@ -87,9 +87,16 @@ export default {
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
+          console.log(this.ruleForm)
           alert("submit!");
+          try {
+            const result = await this.$axios.post('/login',this.ruleForm);
+            console.log(result);
+          } catch (error) {
+            console.log(error)
+          }
         } else {
           console.log("error submit!!");
           return false;
